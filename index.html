@@ -313,8 +313,16 @@
       <section class="contador">
         <h2>Tuve que entrar a OkCupid para comprobar cuándo fue el primer mensaje, entonces no hay necesidad de estar celosa. Hablamos hace exactamente:</h2>
         <div id="contador"></div>
-        <h2>Y como el día que estoy desarrollando esta web aún no tenemos fotos juntas por la distancia, pondré cualquier foto y os dejo decidir después del viaje qué foto se queda aquí.</h2>
+        <h2>Y como el día que estoy desarrollando esta web aún no tenemos fotos juntas por la distancia, pondré cualquier fotos y os dejo decidir después del viaje qué fotos se quedan aquí.</h2>
         <img src="media/foto1.jpg" alt="Foto do casal" class="main-photo" />
+        <br></br>
+        <img src="media/foto8.jpg" alt="Foto do casal" class="gallery-photo"/>
+        <br></br>
+        <img src="media/foto11.jpg" alt="Foto do casal" class="gallery-photo"/>
+        <br></br>
+        <img src="media/foto10.jpg" alt="Foto do casal" class="gallery-photo"/>
+        <br></br>
+        <img src="media/foto9.jpg" alt="Foto do casal" class="gallery-photo"/>
         <br></br>
         <h2>Y nos hemos estado extrañando por:</h2>
         <div id="contador-estresse"></div>
@@ -343,6 +351,62 @@
         <img src="media/foto3.jpg" alt="Foto especial" class="gallery-photo"/>
         <br></br>
         <img src="media/foto4.jpg" alt="Foto especial" class="gallery-photo"/>
+        <br></br>
+        <img src="media/foto12.jpg" alt="Foto especial" class="gallery-photo"/>
+      </section>
+
+      <section class="galeria">
+          <h2>Recuerdos acerca de nuestras Viajes 🚀</h2>
+          <h1>Bogotá:</h1>
+          <img src="media/foto13.jpg" alt="Foto especial" class="gallery-photo"/>
+          <br></br>
+          <img src="media/foto7.jpg" alt="Foto especial" class="gallery-photo"/>
+          <br></br>
+          <img src="media/foto5.jpg" alt="Foto especial" class="gallery-photo"/>
+          <br></br>
+          <img src="media/foto6.jpg" alt="Foto especial" class="gallery-photo"/>
+          <br></br>
+          <img src="media/foto16.jpg" alt="Foto especial" class="gallery-photo"/>
+          <br></br>
+          <img src="media/foto14.jpg" alt="Foto especial" class="gallery-photo"/>
+          <br></br>
+          <img src="media/foto15.jpg" alt="Foto especial" class="gallery-photo"/>
+          <br></br>
+          <img src="media/foto18.jpg" alt="Foto especial" class="gallery-photo"/>
+          <br></br>
+          <img src="media/foto19.jpg" alt="Foto especial" class="gallery-photo"/>
+          <br></br>
+          <img src="media/foto17.jpg" alt="Foto especial" class="gallery-photo"/>
+          <br></br>
+          <img src="media/foto20.jpg" alt="Foto especial" class="gallery-photo"/>
+          <br></br>
+          <img src="media/foto21.jpg" alt="Foto especial" class="gallery-photo"/>
+          <br></br>
+
+          <h1>Cartagena de Las Indias:</h1>
+          <img src="media/foto23.jpg" alt="Foto especial" class="gallery-photo"/>
+          <br></br>
+          <img src="media/foto24.jpg" alt="Foto especial" class="gallery-photo"/>
+          <br></br>
+          <img src="media/foto25.jpg" alt="Foto especial" class="gallery-photo"/>
+          <br></br>
+          <img src="media/foto32.jpg" alt="Foto especial" class="gallery-photo"/>
+          <br></br>
+          <img src="media/foto22.jpg" alt="Foto especial" class="gallery-photo"/>
+          <br></br>
+          <img src="media/foto31.jpg" alt="Foto especial" class="gallery-photo"/>
+          <br></br>
+          <img src="media/foto26.jpg" alt="Foto especial" class="gallery-photo"/>
+          <br></br>
+          <img src="media/foto27.jpg" alt="Foto especial" class="gallery-photo"/>
+          <br></br>
+          <img src="media/foto33.jpg" alt="Foto especial" class="gallery-photo"/>
+          <br></br>
+          <img src="media/foto28.jpg" alt="Foto especial" class="gallery-photo"/>
+          <br></br>
+          <img src="media/foto29.jpg" alt="Foto especial" class="gallery-photo"/>
+          <br></br>
+          <img src="media/foto30.jpg" alt="Foto especial" class="gallery-photo"/>
       </section>
 
       <section class="mensagem">
@@ -399,6 +463,57 @@
       estresseEl.textContent = `0 dias 0 horas 0 minutos y ${segundos} segundos`;
       estresseEl.style.opacity = toggle ? '1' : '0.5';
     }, 500);
+
+    // --- Captura de frame aleatório para thumbnail dos vídeos ---
+    document.addEventListener('DOMContentLoaded', function() {
+      const videos = document.querySelectorAll('.galeria video');
+      videos.forEach(function(video) {
+        // Só tenta se o browser suportar canvas e vídeo
+        if (!video.poster) {
+          // Não faz nada se já tem poster
+          return;
+        }
+        // Remove o poster para garantir que o JS vai tentar gerar
+        video.removeAttribute('poster');
+        video.addEventListener('loadedmetadata', function() {
+          // Pega duração e escolhe um tempo aleatório
+          const duration = video.duration;
+          if (!duration || isNaN(duration)) return;
+          const randomTime = Math.random() * duration * 0.8; // evita pegar o final
+          video.currentTime = randomTime;
+        });
+        video.addEventListener('seeked', function() {
+          try {
+            const canvas = document.createElement('canvas');
+            canvas.width = video.videoWidth;
+            canvas.height = video.videoHeight;
+            const ctx = canvas.getContext('2d');
+            ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
+            const dataURL = canvas.toDataURL('image/jpeg');
+            video.setAttribute('poster', dataURL);
+            // Volta para o início para não atrapalhar o usuário
+            video.currentTime = 0;
+          } catch (e) {
+            // Se falhar, ignora
+          }
+        }, { once: true });
+      });
+    });
+
+    // --- Código para só um vídeo rodar por vez
+    document.addEventListener('DOMContentLoaded', function() {
+    const videos = document.querySelectorAll('video');
+
+    videos.forEach(video => {
+        video.addEventListener('play', () => {
+            videos.forEach(otherVideo => {
+                if (otherVideo !== video && !otherVideo.paused) {
+                    otherVideo.pause();
+                    }
+                });
+            });
+        });
+    });
   </script>
 </body>
 </html>
